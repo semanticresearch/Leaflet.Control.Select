@@ -109,12 +109,12 @@ L.Control.Select = L.Control.extend({
     );
     icon.innerHTML = opts.iconMain;
 
-    map.on("click", this._hideMenu, this);
-
     L.DomEvent.on(icon, "click", L.DomEvent.stop);
     L.DomEvent.on(icon, "click", this._iconClicked, this);*/
 
     this._setMainIcon();
+
+    map.on("click", this._hideMenu, this);
 
     L.DomEvent.disableClickPropagation(this.container);
     L.DomEvent.disableScrollPropagation(this.container);
@@ -131,8 +131,6 @@ L.Control.Select = L.Control.extend({
         this.container
     );
     icon.innerHTML = opts.iconMain;
-
-    map.on("click", this._hideMenu, this);
 
     L.DomEvent.on(icon, "click", L.DomEvent.stop);
     L.DomEvent.on(icon, "click", this._iconClicked, this);
