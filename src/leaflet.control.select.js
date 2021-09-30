@@ -124,6 +124,7 @@ L.Control.Select = L.Control.extend({
   },
 
   _setMainIcon() {
+    const opts = this.options;
     const icon = L.DomUtil.create(
         "a",
         "leaflet-control-button ",
@@ -336,7 +337,7 @@ L.Control.Select = L.Control.extend({
     this._hideMenu();
   },
   setMainIcon() {
-
+    this._setMainIcon();
   }
 });
 
