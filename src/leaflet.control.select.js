@@ -43,7 +43,7 @@ L.Control.Select = L.Control.extend({
           : false);
     }
 
-    console.log(opts.selectedDefault);
+    // console.log(opts.selectedDefault);
 
     this.state = {
       selected: opts.selectedDefault, // false || multi ? {value} : [{value}]
@@ -102,7 +102,7 @@ L.Control.Select = L.Control.extend({
     );
     this.container.setAttribute("id", opts.id);
 
-    const icon = L.DomUtil.create(
+    /*const icon = L.DomUtil.create(
       "a",
       "leaflet-control-button ",
       this.container
@@ -112,13 +112,29 @@ L.Control.Select = L.Control.extend({
     map.on("click", this._hideMenu, this);
 
     L.DomEvent.on(icon, "click", L.DomEvent.stop);
-    L.DomEvent.on(icon, "click", this._iconClicked, this);
+    L.DomEvent.on(icon, "click", this._iconClicked, this);*/
+
+    this._setMainIcon();
 
     L.DomEvent.disableClickPropagation(this.container);
     L.DomEvent.disableScrollPropagation(this.container);
 
     this.render();
     return this.container;
+  },
+
+  _setMainIcon() {
+    const icon = L.DomUtil.create(
+        "a",
+        "leaflet-control-button ",
+        this.container
+    );
+    icon.innerHTML = opts.iconMain;
+
+    map.on("click", this._hideMenu, this);
+
+    L.DomEvent.on(icon, "click", L.DomEvent.stop);
+    L.DomEvent.on(icon, "click", this._iconClicked, this);
   },
 
   _emit(action, data) {
@@ -180,7 +196,7 @@ L.Control.Select = L.Control.extend({
       newState.open &&
       newState.open !== this.state.open
     ) {
-      console.log("group open");
+      // console.log("group open");
       this.options.onGroupOpen(newState.open);
     }
 
@@ -267,6 +283,7 @@ L.Control.Select = L.Control.extend({
       "leaflet-control-select-menu-line-content",
       p
     );
+    pContent.title = item.title;
     const textSpan = L.DomUtil.create("span", "text", pContent);
 
     textSpan.innerHTML = item.label;
@@ -317,6 +334,9 @@ L.Control.Select = L.Control.extend({
   /* public methods */
   close() {
     this._hideMenu();
+  },
+  setMainIcon() {
+
   }
 });
 
