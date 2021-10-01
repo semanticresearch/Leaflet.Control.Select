@@ -8,6 +8,7 @@ L.Control.Select = L.Control.extend({
     iconGroupChecked: "▶",
     iconGroupUnchecked: "⊳",
 
+    iconMainTooltip: "",
     multi: false,
 
     items: [], // {value: 'String', 'label': 'String', items?: [items]}
@@ -101,20 +102,21 @@ L.Control.Select = L.Control.extend({
       "leaflet-control leaflet-bar leaflet-control-select"
     );
     this.container.setAttribute("id", opts.id);
+    if (opts.iconMainTooltip) {
+      this.container.title = opts.iconMainTooltip;
+    }
 
-    /*const icon = L.DomUtil.create(
+    this.icon = L.DomUtil.create(
       "a",
       "leaflet-control-button ",
       this.container
     );
-    icon.innerHTML = opts.iconMain;
-
-    L.DomEvent.on(icon, "click", L.DomEvent.stop);
-    L.DomEvent.on(icon, "click", this._iconClicked, this);*/
-
-    this._setMainIcon();
+    this.icon.innerHTML = opts.iconMain;
 
     map.on("click", this._hideMenu, this);
+
+    L.DomEvent.on(this.icon, "click", L.DomEvent.stop);
+    L.DomEvent.on(this.icon, "click", this._iconClicked, this);
 
     L.DomEvent.disableClickPropagation(this.container);
     L.DomEvent.disableScrollPropagation(this.container);
@@ -123,17 +125,10 @@ L.Control.Select = L.Control.extend({
     return this.container;
   },
 
-  _setMainIcon() {
-    const opts = this.options;
-    const icon = L.DomUtil.create(
-        "a",
-        "leaflet-control-button ",
-        this.container
-    );
-    icon.innerHTML = opts.iconMain;
-
-    L.DomEvent.on(icon, "click", L.DomEvent.stop);
-    L.DomEvent.on(icon, "click", this._iconClicked, this);
+  _setMainIcon(iconClass) {
+    if (this.icon) {
+      this.icon.innerHTML = iconClass;
+    }
   },
 
   _emit(action, data) {
@@ -334,9 +329,12 @@ L.Control.Select = L.Control.extend({
   close() {
     this._hideMenu();
   },
-  setMainIcon() {
-    this._setMainIcon();
+  setMainIcon(iconClass) {
+    this._setMainIcon(iconClass);
   }
 });
 
 L.control.select = options => new L.Control.Select(options);
+function setMainIcon(iconClass) {
+  this._setMainIcon(iconClass);
+}
