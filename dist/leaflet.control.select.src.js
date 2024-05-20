@@ -15,6 +15,7 @@ L.Control.Select = L.Control.extend({
     //"❒",
     iconGroupChecked: "▶",
     iconGroupUnchecked: "⊳",
+    iconMainTooltip: "",
     multi: false,
     items: [],
     // {value: 'String', 'label': 'String', items?: [items]}
@@ -42,9 +43,9 @@ L.Control.Select = L.Control.extend({
       opts.selectedDefault = opts.selectedDefault instanceof Array ? opts.selectedDefault : [];
     } else {
       opts.selectedDefault = opts.selectedDefault || (opts.items instanceof Array && opts.items.length > 0 ? opts.items[0].value : false);
-    }
+    } // console.log(opts.selectedDefault);
 
-    console.log(opts.selectedDefault);
+
     this.state = {
       selected: opts.selectedDefault,
       // false || multi ? {value} : [{value}]
@@ -98,15 +99,25 @@ L.Control.Select = L.Control.extend({
     var opts = this.options;
     this.container = L.DomUtil.create("div", "leaflet-control leaflet-bar leaflet-control-select");
     this.container.setAttribute("id", opts.id);
-    var icon = L.DomUtil.create("a", "leaflet-control-button ", this.container);
-    icon.innerHTML = opts.iconMain;
+
+    if (opts.iconMainTooltip) {
+      this.container.title = opts.iconMainTooltip;
+    }
+
+    this.icon = L.DomUtil.create("a", "leaflet-control-button ", this.container);
+    this.icon.innerHTML = opts.iconMain;
     map.on("click", this._hideMenu, this);
-    L.DomEvent.on(icon, "click", L.DomEvent.stop);
-    L.DomEvent.on(icon, "click", this._iconClicked, this);
+    L.DomEvent.on(this.icon, "click", L.DomEvent.stop);
+    L.DomEvent.on(this.icon, "click", this._iconClicked, this);
     L.DomEvent.disableClickPropagation(this.container);
     L.DomEvent.disableScrollPropagation(this.container);
     this.render();
     return this.container;
+  },
+  _setMainIcon: function _setMainIcon(iconClass) {
+    if (this.icon) {
+      this.icon.innerHTML = iconClass;
+    }
   },
   _emit: function _emit(action, data) {
     var newState = {};
@@ -158,7 +169,7 @@ L.Control.Select = L.Control.extend({
     }
 
     if (this.options.onGroupOpen && newState.open && newState.open !== this.state.open) {
-      console.log("group open");
+      // console.log("group open");
       this.options.onGroupOpen(newState.open);
     }
 
@@ -232,6 +243,7 @@ L.Control.Select = L.Control.extend({
 
     var p = L.DomUtil.create("div", "leaflet-control-select-menu-line", menu);
     var pContent = L.DomUtil.create("div", "leaflet-control-select-menu-line-content", p);
+    pContent.title = item.title;
     var textSpan = L.DomUtil.create("span", "text", pContent);
     textSpan.innerHTML = item.label;
 
@@ -277,9 +289,16 @@ L.Control.Select = L.Control.extend({
   /* public methods */
   close: function close() {
     this._hideMenu();
+  },
+  setMainIcon: function setMainIcon(iconClass) {
+    this._setMainIcon(iconClass);
   }
 });
 
 L.control.select = function (options) {
   return new L.Control.Select(options);
 };
+
+function setMainIcon(iconClass) {
+  this._setMainIcon(iconClass);
+}
